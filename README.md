@@ -56,8 +56,8 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
             Configuration = configuration;
             var sqlServerConfig = configuration.GetSection("Serilog:SqlServer").Get<SerilogSqlServerConfig>();
             var esConfig = configuration.GetSection("Serilog:Elasticsearch").Get<SerilogElasticsearchConfig>();
-            Log.Logger = new LoggerConfiguration("Nome do projeto")
-                .CreateDefaultInstance()
+            Log.Logger = new LoggerConfiguration()
+                .CreateDefaultInstance("Nome do projeto")
                 .WithSqlServer(sqlServerConfig)
                 .WithES(esConfig)
                 .CreateLogger();

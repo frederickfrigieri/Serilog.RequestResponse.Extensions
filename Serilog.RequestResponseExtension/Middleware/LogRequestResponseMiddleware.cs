@@ -20,7 +20,7 @@ namespace Serilog.RequestResponseExtension.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            context.Request.EnableRewind();
+            context.Request.EnableBuffering();
 
             var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
 

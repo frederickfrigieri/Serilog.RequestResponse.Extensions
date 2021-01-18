@@ -6,17 +6,13 @@
     <Company>ItBit</Company>
     <Description>Interface para logar uma requisição e uma resposta utilizando o Serilog com opções para armazenar no banco SQL e Elasticsearch. Ele implementa uma classe que é adicionada no middleware da aplicação. Ele grava dados de nível de Informação e Warning.</Description>
     <PackageTags>Serilog, Request, Response, Middleware</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Na versão 1.0.1 foi adiciono:
-1- Nome do projeto como parametro do construtor do ConfigurationBuilder
-2- Está gravando o AssemblyName
-3- Opção para criar o log por data
-</PackageReleaseNotes>
+    <PackageReleaseNotes>Atualizado para rodar na versão Core 3+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Serilog" Version="2.10.0" />
