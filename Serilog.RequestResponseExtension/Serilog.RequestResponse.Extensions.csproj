@@ -6,7 +6,7 @@
     <Company>ItBit</Company>
     <Description>Interface para logar uma requisição e uma resposta utilizando o Serilog com opções para armazenar no banco SQL e Elasticsearch. Ele implementa uma classe que é adicionada no middleware da aplicação. Ele grava dados de nível de Informação e Warning.</Description>
     <PackageTags>Serilog, Request, Response, Middleware</PackageTags>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Atualizado para rodar na versão Core 3+</PackageReleaseNotes>
   </PropertyGroup>
