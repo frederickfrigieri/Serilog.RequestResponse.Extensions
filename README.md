@@ -43,9 +43,11 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
 - Na classe Startup.cs adicione o using do pacote adicionado
 
 ```
-    using Serilog;
-    using Serilog.RequestResponseExtension.Extensions;
-    using Serilog.RequestResponseExtension.Models;
+using Serilog;
+using Serilog.RequestResponse.Extensions;
+using Serilog.RequestResponse.Extensions.Models;
+using Serilog.RequestResponseExtension.Extensions;
+using Serilog.RequestResponseExtension.Models;
 ```
 
 - Na classe Startup.cs altere o construtor
@@ -54,6 +56,7 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
             var sqlServerConfig = configuration.GetSection("Serilog:SqlServer").Get<SerilogSqlServerConfig>();
             var esConfig = configuration.GetSection("Serilog:Elasticsearch").Get<SerilogElasticsearchConfig>();
             Log.Logger = new LoggerConfiguration()
@@ -71,6 +74,7 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
 ```
         public void ConfigureServices(IServiceCollection services)
         {
+            services.RegisterFilterException();
             services.RegisterLogRequestResponseService();
         }
 ```
@@ -80,9 +84,14 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
 ```
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.RegisterLogRequestResponseMiddleware();
+            app.RegisterLogRequestResponseMiddleware(new SerilogOptions { UseFilterException = false });
         }
 ```
+
+** UseFilterException = False => Vai gravar um log quando a requisição chegar e outra quando enviar a resposta ao cliente ou seja registros (request e response). Caso aconteça um erro entre a entrada e a saída o request está sendo logado e o erro também menos a saída devido a exceção
+
+** UseFilterException = True => Vai gravar apenas um log contendo a entrada, saída e a exceção caso ocorra, para isso registre o serviço do filtro de exceção.
+
 
 # Passo 3 - Verificando 
 
@@ -90,6 +99,25 @@ Install-Package Serilog.RequestResponse.Extensions -Version 1.0.0
 - Consuma um endpoint
 - Realize uma pesquisa no Elastic ou SQL Server no endereço que foi configurado no appsettings e verifique o registro que foi gravado
 
-Qualquer dúvida, problema ou sugestão pode procurar o Fred, Eduardo ou Felipe
 
-THE END
+# Customizando as Exceções
+
+É possível customizar erros e respostas para o cliente para isso é necessário herdar a classe CustomException de Serilog.RequestResponse.Extensions.Models e implementar seus construtores;
+
+```
+    public class DomainException : CustomException
+    {
+        public DomainException(int statusCode = StatusCodes.Status400BadRequest) : base(statusCode)
+        {
+            Dados = new { Mensagem = "Erro de negócio." };
+        }
+
+        public DomainException(object dados, int statusCode = StatusCodes.Status400BadRequest) : base(dados, statusCode)
+        {
+        }
+
+        public DomainException(string mensagem, int statusCode = StatusCodes.Status400BadRequest) : base(mensagem, statusCode)
+        {
+        }
+    }
+```
