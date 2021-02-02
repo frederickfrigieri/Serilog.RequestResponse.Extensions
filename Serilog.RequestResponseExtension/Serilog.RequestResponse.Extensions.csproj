@@ -4,11 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Frederick Frigieri</Authors>
     <Company>ItBit</Company>
-    <Description>Interface para logar uma requisição e uma resposta utilizando o Serilog com opções para armazenar no banco SQL e Elasticsearch. Ele implementa uma classe que é adicionada no middleware da aplicação. Ele grava dados de nível de Informação e Warning.</Description>
-    <PackageTags>Serilog, Request, Response, Middleware</PackageTags>
-    <Version>1.0.5</Version>
+    <Description>Interface para logar uma requisição e uma resposta utilizando o Serilog com opções para armazenar no banco SQL e Elasticsearch.
+Ele implementa uma classe que é adicionada no middleware da aplicação.
+Opção para configurar filtro de exceção customizado</Description>
+    <PackageTags>Serilog, Request, Response, Middleware, Filter Exception</PackageTags>
+    <Version>1.0.6</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Essa versão corrige problema com cabeçalho com Transfer-Encondig do tipo Chucked</PackageReleaseNotes>
+    <PackageReleaseNotes>Essa versão oferece um serviço de Filtro de Exceção
+Corrige um problema quando o projeto não tem Filtro de Exceção</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
