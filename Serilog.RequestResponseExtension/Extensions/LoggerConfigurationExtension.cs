@@ -44,12 +44,15 @@ namespace Serilog.RequestResponseExtension.Extensions
         {
             loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .Enrich.WithExceptionDetails()
                 .Enrich.WithAssemblyName()
                 .Enrich.WithAssemblyVersion()
                 .Enrich.WithProperty("ProjectName", projectName);
+
 
             return loggerConfiguration;
         }

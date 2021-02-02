@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IO;
+using Serilog.RequestResponse.Extensions.Models;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,32 +13,53 @@ namespace Serilog.RequestResponseExtension.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-
+        private readonly SerilogOptions _options;
         private string _requestBody;
         private string _responseBody;
         private string _requestQueryString;
         private Stopwatch _stopWatch;
 
-        public LogRequestResponseMiddleware(RequestDelegate next)
+        public LogRequestResponseMiddleware(RequestDelegate next, SerilogOptions options)
         {
             _next = next;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
+            _options = options;
         }
 
         public async Task Invoke(HttpContext context)
         {
             _stopWatch = new Stopwatch();
-            await ProcessRequest(context);
-            await ProcessResponse(context);
 
+            await ProcessRequest(context);
+
+            if (_options.UseFilterException == false)
+                LogRequest(context);
+
+            await ProcessResponse(context);
+            LogRequestAndResponse(context);
+        }
+
+        private void LogRequestAndResponse(HttpContext context)
+        {
             Log.ForContext("RequestBody", _requestBody)
                 .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("RequestQueryString", _requestQueryString)
                 .ForContext("ResponseBody", _responseBody)
                 .ForContext("TimeResponse", _stopWatch.ElapsedMilliseconds)
                 .ForContext("UsuarioId", context.User?.Identity.Name)
+                .ForContext("Exception", context.Items["StackTrace"], destructureObjects: true)
                 .Information("Response information {RequestMethod} {RequestPath} {statusCode}",
                   context.Request.Method, context.Request.Path, context.Response.StatusCode);
+        }
+
+        private void LogRequest(HttpContext context)
+        {
+            Log.ForContext("RequestBody", _requestBody)
+                .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
+                .ForContext("RequestQueryString", _requestQueryString)
+                .ForContext("UsuarioId", context.User?.Identity.Name)
+                .Information("Response information {RequestMethod} {RequestPath}",
+                  context.Request.Method, context.Request.Path);
         }
 
         private async Task ProcessRequest(HttpContext context)
