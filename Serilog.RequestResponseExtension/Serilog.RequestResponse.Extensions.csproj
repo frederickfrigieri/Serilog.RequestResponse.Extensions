@@ -11,6 +11,7 @@ Opção para configurar filtro de exceção customizado</Description>
     <Version>1.0.8</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Alterado o level do namespace Microsoft para Fatal. Com isso passo a gravar apenas o Log com Request, Response e Exception</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/frederickfrigieri/Serilog.RequestResponse.Extensions</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
