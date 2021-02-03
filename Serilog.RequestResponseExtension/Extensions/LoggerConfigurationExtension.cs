@@ -42,21 +42,14 @@ namespace Serilog.RequestResponseExtension.Extensions
 
         public static LoggerConfiguration CreateDefaultInstance(this LoggerConfiguration loggerConfiguration, string projectName)
         {
-            loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Fatal)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Model.Validation", LogEventLevel.Fatal)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Infrastructure", LogEventLevel.Fatal)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Connection", LogEventLevel.Fatal)
+            loggerConfiguration
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Fatal)
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .Enrich.WithExceptionDetails()
                 .Enrich.WithAssemblyName()
                 .Enrich.WithAssemblyVersion()
                 .Enrich.WithProperty("ProjectName", projectName);
-
 
             return loggerConfiguration;
         }
