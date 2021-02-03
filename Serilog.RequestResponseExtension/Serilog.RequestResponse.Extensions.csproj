@@ -8,9 +8,9 @@
 Ele implementa uma classe que é adicionada no middleware da aplicação.
 Opção para configurar filtro de exceção customizado</Description>
     <PackageTags>Serilog, Request, Response, Middleware, Filter Exception</PackageTags>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Alterei o level de 3 source do EF para Critical</PackageReleaseNotes>
+    <PackageReleaseNotes>Alterado o level do namespace Microsoft para Fatal. Com isso passo a gravar apenas o Log com Request, Response e Exception</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
