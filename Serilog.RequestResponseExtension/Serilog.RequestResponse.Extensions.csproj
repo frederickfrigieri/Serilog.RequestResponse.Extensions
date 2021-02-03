@@ -8,10 +8,9 @@
 Ele implementa uma classe que é adicionada no middleware da aplicação.
 Opção para configurar filtro de exceção customizado</Description>
     <PackageTags>Serilog, Request, Response, Middleware, Filter Exception</PackageTags>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Essa versão oferece um serviço de Filtro de Exceção
-Corrige um problema quando o projeto não tem Filtro de Exceção</PackageReleaseNotes>
+    <PackageReleaseNotes>Alterei o level de 3 source do EF para Critical</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
