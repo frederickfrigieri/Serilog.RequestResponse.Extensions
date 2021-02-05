@@ -47,7 +47,7 @@ namespace Serilog.RequestResponseExtension.Middleware
                 .ForContext("ResponseBody", _responseBody)
                 .ForContext("TimeResponse", _stopWatch.ElapsedMilliseconds)
                 .ForContext("UsuarioId", context.User?.Identity.Name)
-                .ForContext("Exception", context.Items["StackTrace"], destructureObjects: true)
+                .ForContext("Exception", context.Items["Exception"], destructureObjects: true)
                 .Information("Response information {RequestMethod} {RequestPath} {statusCode}",
                   context.Request.Method, context.Request.Path, context.Response.StatusCode);
         }

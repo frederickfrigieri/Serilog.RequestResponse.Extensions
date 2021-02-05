@@ -15,7 +15,7 @@ namespace Serilog.RequestResponse.Extensions.Filters
             if (customException.Dados != null)
                 context.Result = new JsonResult(customException.Dados);
 
-            context.HttpContext.Items.Add("StackTrace", context.Exception.ToString());
+            context.HttpContext.Items.Add("Exception", context.Exception.ToString());
 
             base.OnException(context);
         }

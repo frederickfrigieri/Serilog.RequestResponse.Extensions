@@ -22,23 +22,58 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Route("ExceptionComTryCatch")]
+        public IActionResult ExceptionComTryCatch()
+        {
+            try
+            {
+                throw new Exception("Exception no try");
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception no catch", e);
+            }
+        }
+
+        [HttpGet]
+        [Route("ExceptionComObjetoEInnerException")]
+        public IActionResult ExceptionComObjetoEInnerException()
+        {
+            throw new DomainException(new { Codigo = 1234567 }, new Exception("Inner Exception"), 200);
+        }
+
+        [HttpGet]
+        [Route("ExceptionComObjeto")]
+        public IActionResult ExceptionComObjeto()
+        {
+            throw new DomainException(new { Codigo = 1234567 }, 200);
+        }
+
+        [HttpGet]
+        [Route("ExceptionComMensagemEInnerException")]
+        public IActionResult ExceptionComMensagemEInnerException()
+        {
+            throw new DomainException("Mensagem do Throw", new Exception("Com Inner Exception"));
+        }
+
+        [HttpGet]
+        [Route("ExceptionComMensagem")]
+        public IActionResult ExceptionComMensagem()
+        {
+            throw new DomainException("Mensagem do Throw");
+        }
+
+        [HttpGet]
+        [Route("ExceptionSemParametro")]
+        public IActionResult ExceptionSemParametro()
+        {
+            throw new DomainException();
+        }
+
+
+        [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            //throw new DomainException();
-            //throw new DomainException(new { Codigo = 1234567 }, 200);
-            //throw new DomainException("Mensagem do Throw");
-
-            throw new Exception("Teste exception", new DomainException());
-
-            //try
-            //{
-            //    throw new CustomException("Lançando uma exception (linha 32)");
-            //}
-            //catch (Exception e)
-            //{
-            //    throw new Exception("Exception nova", e);
-            //}
-
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
