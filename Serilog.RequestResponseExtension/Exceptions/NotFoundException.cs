@@ -4,7 +4,7 @@ using System;
 
 namespace Serilog.RequestResponse.Extensions.Exceptions
 {
-    public class NotFoundException : CustomException
+    public sealed class NotFoundException : CustomException
     {
         public NotFoundException(int statusCode = StatusCodes.Status404NotFound) : base(statusCode)
         {
@@ -16,6 +16,14 @@ namespace Serilog.RequestResponse.Extensions.Exceptions
         }
 
         public NotFoundException(string mensagem, int statusCode = StatusCodes.Status404NotFound) : base(mensagem, statusCode)
+        {
+        }
+
+        public NotFoundException(object dados, Exception innerException, int statusCode = 500) : base(dados, innerException, statusCode)
+        {
+        }
+
+        public NotFoundException(string mensagem, Exception innerException, int statusCode = 500) : base(mensagem, innerException, statusCode)
         {
         }
     }

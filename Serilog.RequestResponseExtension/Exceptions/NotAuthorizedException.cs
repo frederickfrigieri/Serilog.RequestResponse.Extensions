@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog.RequestResponse.Extensions.Models;
+using System;
 
 namespace Serilog.RequestResponse.Extensions.Exceptions
 {
-    public class NotAuthorizedException : CustomException
+    public sealed class NotAuthorizedException : CustomException
     {
         public NotAuthorizedException(int statusCode = StatusCodes.Status401Unauthorized) : base(statusCode)
         {
@@ -15,6 +16,14 @@ namespace Serilog.RequestResponse.Extensions.Exceptions
         }
 
         public NotAuthorizedException(string mensagem, int statusCode = 500) : base(mensagem, statusCode)
+        {
+        }
+
+        public NotAuthorizedException(object dados, Exception innerException, int statusCode = 500) : base(dados, innerException, statusCode)
+        {
+        }
+
+        public NotAuthorizedException(string mensagem, Exception innerException, int statusCode = 500) : base(mensagem, innerException, statusCode)
         {
         }
     }

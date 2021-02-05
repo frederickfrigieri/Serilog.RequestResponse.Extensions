@@ -21,10 +21,23 @@ namespace Serilog.RequestResponse.Extensions.Models
             Dados = dados;
         }
 
-        public CustomException(string mensagem, int statusCode = StatusCodes.Status500InternalServerError)
+        public CustomException(object dados, Exception innerException, int statusCode = StatusCodes.Status500InternalServerError) : base("", innerException)
+        {
+            StatusCode = statusCode;
+            Dados = dados;
+        }
+
+        public CustomException(string mensagem, int statusCode = StatusCodes.Status500InternalServerError) : base(mensagem)
         {
             StatusCode = statusCode;
             Dados = new { Mensagem = mensagem };
         }
+
+        public CustomException(string mensagem, Exception innerException, int statusCode = StatusCodes.Status500InternalServerError) : base(mensagem, innerException)
+        {
+            StatusCode = statusCode;
+            Dados = new { Mensagem = mensagem };
+        }
+
     }
 }

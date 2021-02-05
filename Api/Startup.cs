@@ -39,7 +39,7 @@ namespace Api
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            app.RegisterLogRequestResponseMiddleware(new SerilogOptions { UseFilterException = false });
+            app.RegisterLogRequestResponseMiddleware(new SerilogOptions { UseFilterException = true });
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

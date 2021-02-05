@@ -121,3 +121,7 @@ using Serilog.RequestResponseExtension.Models;
         }
     }
 ```
+
+
+### Repositório do projeto
+(https://github.com/frederickfrigieri/Serilog.RequestResponse.Extensions)

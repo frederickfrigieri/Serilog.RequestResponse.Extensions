@@ -4,7 +4,7 @@ using System;
 
 namespace Serilog.RequestResponse.Extensions.Exceptions
 {
-    public class DomainException : CustomException
+    public sealed class DomainException : CustomException
     {
         public DomainException(int statusCode = StatusCodes.Status400BadRequest) : base(statusCode)
         {
@@ -16,6 +16,14 @@ namespace Serilog.RequestResponse.Extensions.Exceptions
         }
 
         public DomainException(string mensagem, int statusCode = StatusCodes.Status400BadRequest) : base(mensagem, statusCode)
+        {
+        }
+
+        public DomainException(object dados, Exception innerException, int statusCode = 500) : base(dados, innerException, statusCode)
+        {
+        }
+
+        public DomainException(string mensagem, Exception innerException, int statusCode = 500) : base(mensagem, innerException, statusCode)
         {
         }
     }
