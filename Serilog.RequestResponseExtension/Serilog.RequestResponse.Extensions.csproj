@@ -12,6 +12,7 @@ Opção para configurar filtro de exceção customizado</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Foi adicionada duas novas cargas de CustomException aceitando uma InnerException</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/frederickfrigieri/Serilog.RequestResponse.Extensions</PackageProjectUrl>
+    <PackageVersion>1.1.1</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

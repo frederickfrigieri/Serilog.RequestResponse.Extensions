@@ -25,14 +25,17 @@ namespace Api.Controllers
         [Route("ExceptionComTryCatch")]
         public IActionResult ExceptionComTryCatch()
         {
-            try
-            {
-                throw new Exception("Exception no try");
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Exception no catch", e);
-            }
+            (new ErroService()).GerarErro1();
+
+            return Ok();
+            //try
+            //{
+            //    throw new Exception("Exception no try");
+            //}
+            //catch (Exception e)
+            //{
+            //    throw new Exception("Exception no catch", e);
+            //}
         }
 
         [HttpGet]
