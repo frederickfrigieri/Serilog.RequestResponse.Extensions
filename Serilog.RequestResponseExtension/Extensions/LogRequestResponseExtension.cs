@@ -7,9 +7,9 @@ namespace Serilog.RequestResponseExtension.Extensions
 {
     public static class LogRequestResponseExtension
     {
-        public static void RegisterLogRequestResponseMiddleware(this IApplicationBuilder app, SerilogOptions options)
+        public static void RegisterLogRequestResponseMiddleware(this IApplicationBuilder app, LogRequestResponseOptions options)
         {
-            app.UseMiddleware<LogRequestResponseMiddleware>(options);
+            app.UseMiddleware<LogRequestResponse>(options);
         }
 
         public static void RegisterLogRequestResponseService(this IServiceCollection services)

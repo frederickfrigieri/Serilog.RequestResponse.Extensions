@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.IO;
 using Serilog.RequestResponse.Extensions.Models;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace Serilog.RequestResponseExtension.Middleware
 {
-    public class LogRequestResponseMiddleware
+    public class LogRequestResponse
     {
         private readonly RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-        private readonly SerilogOptions _options;
+        private readonly LogRequestResponseOptions _options;
         private string _requestBody;
         private string _responseBody;
         private string _requestQueryString;
         private Stopwatch _stopWatch;
 
-        public LogRequestResponseMiddleware(RequestDelegate next, SerilogOptions options)
+        public LogRequestResponse(RequestDelegate next, LogRequestResponseOptions options)
         {
             _next = next;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
@@ -32,36 +34,16 @@ namespace Serilog.RequestResponseExtension.Middleware
 
             await ProcessRequest(context);
 
-            if (_options.UseFilterException == false)
+            //Quando não tiver usando um filtro para tratamento de exceção deve logar a requisição sempre no início
+            if (!_options.UseFilterOrMiddlewareException)
                 LogRequest(context);
 
             await ProcessResponse(context);
+
             LogRequestAndResponse(context);
         }
 
-        private void LogRequestAndResponse(HttpContext context)
-        {
-            Log.ForContext("RequestBody", _requestBody)
-                .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
-                .ForContext("RequestQueryString", _requestQueryString)
-                .ForContext("ResponseBody", _responseBody)
-                .ForContext("TimeResponse", _stopWatch.ElapsedMilliseconds)
-                .ForContext("UsuarioId", context.User?.Identity.Name)
-                .ForContext("Exception", context.Items["Exception"], destructureObjects: true)
-                .Information("Response information {RequestMethod} {RequestPath} {statusCode}",
-                  context.Request.Method, context.Request.Path, context.Response.StatusCode);
-        }
-
-        private void LogRequest(HttpContext context)
-        {
-            Log.ForContext("RequestBody", _requestBody)
-                .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
-                .ForContext("RequestQueryString", _requestQueryString)
-                .ForContext("UsuarioId", context.User?.Identity.Name)
-                .Information("Response information {RequestMethod} {RequestPath}",
-                  context.Request.Method, context.Request.Path);
-        }
-
+        #region Methods for Middleware
         private async Task ProcessRequest(HttpContext context)
         {
             _stopWatch.Start();
@@ -111,6 +93,48 @@ namespace Serilog.RequestResponseExtension.Middleware
                 await memoryStream.CopyToAsync(originalBodyStream);
             }
         }
+        #endregion
+
+
+        #region Methods for Logger Context
+        //Esses métodos poderiam estar em um outro serviço???
+        //Pode criar um serviço que recebe um context e loga ele
+        //Precisa pegar o body do context e o requeststring sem precisar ser do middleware
+
+        private Dictionary<string, string> ConvertDictionary(IHeaderDictionary headerDictionary) => headerDictionary.ToDictionary(h => h.Key, h => h.Value.ToString());
+
+        private ILogger Logger(HttpContext context)
+        {
+            var logger = Log.ForContext("RequestBody", _requestBody)
+                            .ForContext("RequestHeaders", ConvertDictionary(context.Request.Headers), destructureObjects: true)
+                            .ForContext("RequestQueryString", _requestQueryString)
+                            .ForContext("UsuarioId", context.User?.Identity.Name);
+            return logger;
+        }
+
+        private void LogRequest(HttpContext context)
+        {
+            if (_options.NotShouldLog(context, TypeRemoveHttpLog.Method))
+                return;
+
+            Logger(context).Information("Response information {RequestMethod} {RequestPath}", context.Request.Method, context.Request.Path);
+        }
+
+        private void LogRequestAndResponse(HttpContext context)
+        {
+            var error = context.Response.StatusCode >= 400 || context.Items["Exception"] != null;
+
+            if (error && _options.NotShouldLog(context, TypeRemoveHttpLog.StatusCode)) return;
+            if (!error && _options.ExistsRuleForNotLog(context)) return;
+
+            Logger(context)
+                .ForContext("ResponseBody", _responseBody)
+                .ForContext("TimeResponse", _stopWatch.ElapsedMilliseconds)
+                .ForContext("Exception", context.Items["Exception"], destructureObjects: true)
+                .Information("Response information {RequestMethod} {RequestPath} {statusCode}",
+                  context.Request.Method, context.Request.Path, context.Response.StatusCode);
+        }
+        #endregion
     }
 
 }
